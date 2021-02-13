@@ -1,5 +1,7 @@
 const path = require("path");
 const express = require("express");
+const favicon = require("express-favicon");
+const cors = require("cors");
 const dotenv = require("dotenv");
 const colors = require("colors");
 const morgan = require("morgan");
@@ -13,15 +15,17 @@ const transactions = require("./routes/transactions");
 
 const app = express();
 
+app.use(favicon(__dirname + "/client/public/favicon.ico"));
+
 app.use(express.json());
+
+app.use(cors());
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
 app.use("/api/v1/transactions", transactions);
-
-app.get("/", (req, res) => res.send("Hello"));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("client/build"));
